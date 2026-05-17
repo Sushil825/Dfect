@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Dfect"
-run/main_scene="uid://d4k13w1ferbma"
+run/main_scene="uid://llqa83yqei45"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 

@@ -14,7 +14,6 @@
 [ext_resource type="Script" uid="uid://cytafq8i1y8qm" path="res://addons/godot_state_charts/atomic_state.gd" id="7_gk6dx"]
 [ext_resource type="Texture2D" uid="uid://bkkdqwc4mqm7r" path="res://Assets/male_hero_free/individual_sheets/male_hero-run.png" id="8_dey5f"]
 [ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="8_jlvik"]
-[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="9_gk6dx"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1agin"]
 atlas = ExtResource("4_7g0yx")
@@ -312,7 +311,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -354,6 +353,8 @@ animations = [{
 size = Vector2(10, 34)
 
 [node name="Player" type="CharacterBody2D" unique_id=864730155]
+z_index = 10
+y_sort_enabled = true
 collision_mask = 128
 script = ExtResource("1_a3d8c")
 
@@ -365,7 +366,7 @@ player_stats = ExtResource("3_jhyir")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2132219086]
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_06tpx")
-animation = &"run"
+animation = &"idle"
 autoplay = "walk"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1005207504]
@@ -431,6 +432,12 @@ to = NodePath("../../Jump")
 event = &"run_to_jump"
 delay_in_seconds = "0.0"
 
+[node name="Transition4" type="Node" parent="StateChart/ParallelState/Movement/Run" unique_id=742198948]
+script = ExtResource("8_jlvik")
+to = NodePath("../../Fall")
+event = &"run_to_fall"
+delay_in_seconds = "0.0"
+
 [node name="Jump" type="Node" parent="StateChart/ParallelState/Movement" unique_id=763507303]
 script = ExtResource("7_gk6dx")
 
@@ -488,14 +495,6 @@ script = ExtResource("7_gk6dx")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1040387305]
 zoom = Vector2(3, 3)
-
-[node name="StateChartDebugger" parent="." unique_id=774775699 instance=ExtResource("9_gk6dx")]
-visible = false
-offset_left = -318.0
-offset_top = -177.0
-offset_right = -158.0
-offset_bottom = 121.0
-initial_node_to_watch = NodePath("../StateChart")
 
 [connection signal="state_entered" from="StateChart/ParallelState/Movement/Walk" to="PlayerStateHandler" method="_on_walk_state_entered"]
 [connection signal="state_physics_processing" from="StateChart/ParallelState/Movement/Walk" to="PlayerStateHandler" method="_on_walk_state_physics_processing"]

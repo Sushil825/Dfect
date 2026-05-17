@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://c054gbguupnp5"]
+
+[ext_resource type="Script" uid="uid://yd3u0xg50en7" path="res://Scenes/World/decorations/decoration_spawner.gd" id="1_biy5v"]
+[ext_resource type="PackedScene" uid="uid://lhxnixd8ng47" path="res://Scenes/World/decorations/bush.tscn" id="2_uqac0"]
+
+[node name="DecorationSpawner" type="Node2D" unique_id=1759741606]
+script = ExtResource("1_biy5v")
+Decorations = Array[PackedScene]([ExtResource("2_uqac0")])
+no_of_decoration_to_spawn = 3

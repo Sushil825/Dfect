@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://c3ronv7rh67k3"]
+
+[ext_resource type="Script" uid="uid://bmj67i6wbckil" path="res://Scenes/World/decorations/decoration.gd" id="1_j2gt6"]
+
+[node name="Decoration" type="Node2D" unique_id=54739487]
+z_index = 2
+script = ExtResource("1_j2gt6")

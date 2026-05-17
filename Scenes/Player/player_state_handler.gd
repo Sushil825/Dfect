@@ -5,13 +5,8 @@ class_name PlayerStateHandler
 @onready var animated_sprite_2d: AnimatedSprite2D = %AnimatedSprite2D
 @onready var state_chart: StateChart = $"../StateChart"
 
-
-
-
 func _process(delta: float) -> void:
 	handle_input()
-
-
 
 
 func handle_input():
@@ -31,11 +26,6 @@ func handle_animation(anim:String):
 
 
 
-
-
-
-
-
 func _on_idle_state_physics_processing(delta: float) -> void:
 	
 	if player.is_on_floor():
@@ -44,7 +34,6 @@ func _on_idle_state_physics_processing(delta: float) -> void:
 		if Input.get_axis("go_left","go_right")!=0:
 			state_chart.send_event("idle_to_walk")
 	
-		
 
 
 func _on_idle_state_entered() -> void:
@@ -53,10 +42,7 @@ func _on_idle_state_entered() -> void:
 
 func _on_walk_state_physics_processing(delta: float) -> void:
 	player.velocity.x=player_stats.walk_speed*player.direction.x
-	
-	
 	if player.is_on_floor():
-		
 		if Input.get_axis("go_left","go_right")==0:
 			state_chart.send_event("walk_to_idle")
 	
@@ -87,6 +73,7 @@ func _on_jump_state_physics_processing(delta: float) -> void:
 		player.velocity.y*=0.5
 
 
+
 func _on_jump_state_entered() -> void:
 	handle_animation("jump")
 	player.velocity.y=player_stats.jump_force
@@ -94,8 +81,7 @@ func _on_jump_state_entered() -> void:
 
 func _on_fall_state_entered() -> void:
 	handle_animation("fall")
-
-
+	
 func _on_fall_state_physics_processing(delta: float) -> void:
 	if player.is_on_floor():
 		state_chart.send_event("fall_to_idle")
@@ -106,6 +92,9 @@ func _on_fall_state_physics_processing(delta: float) -> void:
 
 
 func _on_run_state_physics_processing(delta: float) -> void:
+	player.velocity.x=player_stats.run_speed*player.direction.x
+	if player.velocity.y>5:
+		state_chart.send_event("run_to_fall")
 	
 	if Input.is_action_just_pressed("jump"):
 			state_chart.send_event("run_to_jump")
@@ -116,8 +105,6 @@ func _on_run_state_physics_processing(delta: float) -> void:
 		
 		else:
 			state_chart.send_event("run_to_idle")
-	
-	player.velocity.x=player_stats.run_speed*player.direction.x
 
 
 func _on_run_state_entered() -> void:

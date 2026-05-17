@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://lhxnixd8ng47"]
+
+[ext_resource type="Script" uid="uid://bmj67i6wbckil" path="res://Scenes/World/decorations/decoration.gd" id="1_5ngmb"]
+[ext_resource type="Texture2D" uid="uid://cmmput4wulxhd" path="res://Assets/Final/brush.png" id="2_8nxut"]
+
+[node name="Bush1" type="Node2D" unique_id=1557014607 node_paths=PackedStringArray("sprite")]
+script = ExtResource("1_5ngmb")
+sprite = NodePath("Sprite2D")
+metadata/_custom_type_script = "uid://bmj67i6wbckil"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=627419227]
+texture = ExtResource("2_8nxut")
+vframes = 2
