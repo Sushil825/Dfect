@@ -4,7 +4,12 @@ class_name Player
 @onready var state_chart: StateChart = $StateChart
 @onready var animated_sprite_2d: AnimatedSprite2D = %AnimatedSprite2D
 @onready var player_state_handler: Node = $PlayerStateHandler
+@onready var hit_box: HitBox = $HitBox
 
+
+
+func _ready() -> void:
+	pass
 
 
 var direction=Vector2.RIGHT

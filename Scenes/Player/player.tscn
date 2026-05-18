@@ -7,13 +7,17 @@
 [ext_resource type="Script" uid="uid://couw105c3bde4" path="res://addons/godot_state_charts/state_chart.gd" id="3_xpcdj"]
 [ext_resource type="Texture2D" uid="uid://d2w7ftkt0b1h5" path="res://Assets/male_hero_free/individual_sheets/male_hero-fall.png" id="4_06tpx"]
 [ext_resource type="Texture2D" uid="uid://68gjs5xn35lj" path="res://Assets/male_hero_free/individual_sheets/male_hero-combo_1.png" id="4_7g0yx"]
+[ext_resource type="Resource" uid="uid://dblpq1ugvwka4" path="res://Scripts/resource/sword_attack.tres" id="4_r5xpd"]
 [ext_resource type="Script" uid="uid://c1vp0ojjvaby1" path="res://addons/godot_state_charts/parallel_state.gd" id="5_0u5uq"]
 [ext_resource type="Texture2D" uid="uid://b1s1cn8y50oju" path="res://Assets/male_hero_free/individual_sheets/male_hero-walk.png" id="5_74mp2"]
 [ext_resource type="Texture2D" uid="uid://bjdrcx8t0abla" path="res://Assets/male_hero_free/individual_sheets/male_hero-jump.png" id="5_oikmp"]
 [ext_resource type="Script" uid="uid://jk2jm1g6q853" path="res://addons/godot_state_charts/compound_state.gd" id="6_jlvik"]
+[ext_resource type="Texture2D" uid="uid://binrjt8gy8x6n" path="res://Assets/male_hero_free/individual_sheets/male_hero-combo_1_end.png" id="6_ks1b7"]
 [ext_resource type="Script" uid="uid://cytafq8i1y8qm" path="res://addons/godot_state_charts/atomic_state.gd" id="7_gk6dx"]
 [ext_resource type="Texture2D" uid="uid://bkkdqwc4mqm7r" path="res://Assets/male_hero_free/individual_sheets/male_hero-run.png" id="8_dey5f"]
 [ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="8_jlvik"]
+[ext_resource type="Script" uid="uid://c76lonbrgrna8" path="res://Scripts/Components/hit_box.gd" id="15_dey5f"]
+[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="18_hnuln"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1agin"]
 atlas = ExtResource("4_7g0yx")
@@ -26,6 +30,22 @@ region = Rect2(128, 0, 128, 128)
 [sub_resource type="AtlasTexture" id="AtlasTexture_enij7"]
 atlas = ExtResource("4_7g0yx")
 region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8d028"]
+atlas = ExtResource("6_ks1b7")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0liok"]
+atlas = ExtResource("6_ks1b7")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gyc8k"]
+atlas = ExtResource("6_ks1b7")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qflxp"]
+atlas = ExtResource("6_ks1b7")
+region = Rect2(384, 0, 128, 128)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2ahak"]
 atlas = ExtResource("4_06tpx")
@@ -190,18 +210,35 @@ region = Rect2(1152, 0, 128, 128)
 [sub_resource type="SpriteFrames" id="SpriteFrames_06tpx"]
 animations = [{
 "frames": [{
-"duration": 1.0,
+"duration": 2.0,
 "texture": SubResource("AtlasTexture_1agin")
 }, {
-"duration": 1.0,
+"duration": 2.0,
 "texture": SubResource("AtlasTexture_2jnj1")
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_enij7")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack",
-"speed": 5.0
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8d028")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0liok")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gyc8k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qflxp")
+}],
+"loop": false,
+"name": &"attack_end",
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -349,29 +386,67 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_a3d8c"]
-size = Vector2(10, 34)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7g0yx"]
+radius = 5.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r5xpd"]
+size = Vector2(39, 12)
+
+[sub_resource type="Animation" id="Animation_ks1b7"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_r5xpd"]
+resource_name = "attack_animation"
+length = 0.5
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PlayerStateHandler")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.23333332, 0.46666667),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"enable_hitbox"
+}, {
+"args": [],
+"method": &"disable_hitbox"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ks1b7"]
+_data = {
+&"RESET": SubResource("Animation_ks1b7"),
+&"attack_animation": SubResource("Animation_r5xpd")
+}
 
 [node name="Player" type="CharacterBody2D" unique_id=864730155]
 z_index = 10
 y_sort_enabled = true
-collision_mask = 128
+collision_mask = 192
+floor_snap_length = 10.0
 script = ExtResource("1_a3d8c")
 
-[node name="PlayerStateHandler" type="Node" parent="." unique_id=2140536713 node_paths=PackedStringArray("player")]
+[node name="PlayerStateHandler" type="Node" parent="." unique_id=2140536713 node_paths=PackedStringArray("sword_collider", "player", "attack_timer")]
 script = ExtResource("2_mtuoh")
+sword_collider = NodePath("../HitBox/CollisionShape2D")
 player = NodePath("..")
 player_stats = ExtResource("3_jhyir")
+weapon_stats = ExtResource("4_r5xpd")
+attack_timer = NodePath("../Timers/attack_timer")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2132219086]
 unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_06tpx")
-animation = &"idle"
+animation = &"attack"
 autoplay = "walk"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1005207504]
-position = Vector2(0, -1)
-shape = SubResource("RectangleShape2D_a3d8c")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1322977752]
+visible = false
+position = Vector2(0, 1)
+shape = SubResource("CapsuleShape2D_7g0yx")
 
 [node name="StateChart" type="Node" parent="." unique_id=668389036]
 script = ExtResource("3_xpcdj")
@@ -490,12 +565,52 @@ initial_state = NodePath("NotAttack")
 [node name="Attack" type="Node" parent="StateChart/ParallelState/Attack" unique_id=90749332]
 script = ExtResource("7_gk6dx")
 
+[node name="Transition" type="Node" parent="StateChart/ParallelState/Attack/Attack" unique_id=593035933]
+script = ExtResource("8_jlvik")
+to = NodePath("../../NotAttack")
+event = &"attack_to_na"
+delay_in_seconds = "0.0"
+
 [node name="NotAttack" type="Node" parent="StateChart/ParallelState/Attack" unique_id=352104704]
 script = ExtResource("7_gk6dx")
+
+[node name="Transition" type="Node" parent="StateChart/ParallelState/Attack/NotAttack" unique_id=431124053]
+script = ExtResource("8_jlvik")
+to = NodePath("../../Attack")
+event = &"na_to_attack"
+delay_in_seconds = "0.0"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1040387305]
 zoom = Vector2(3, 3)
 
+[node name="HitBox" type="Area2D" parent="." unique_id=174092556]
+collision_layer = 4
+collision_mask = 4
+monitoring = false
+monitorable = false
+script = ExtResource("15_dey5f")
+metadata/_custom_type_script = "uid://c76lonbrgrna8"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox" unique_id=2073965614]
+position = Vector2(30, 0)
+shape = SubResource("RectangleShape2D_r5xpd")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=2085042391]
+unique_name_in_owner = true
+libraries/ = SubResource("AnimationLibrary_ks1b7")
+
+[node name="Timers" type="Node" parent="." unique_id=192491708]
+
+[node name="attack_timer" type="Timer" parent="Timers" unique_id=1568268871]
+
+[node name="StateChartDebugger" parent="." unique_id=489938885 instance=ExtResource("18_hnuln")]
+offset_left = -320.0
+offset_top = -181.0
+offset_right = -36.0
+offset_bottom = -43.0
+initial_node_to_watch = NodePath("../StateChart")
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="PlayerStateHandler" method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="state_entered" from="StateChart/ParallelState/Movement/Walk" to="PlayerStateHandler" method="_on_walk_state_entered"]
 [connection signal="state_physics_processing" from="StateChart/ParallelState/Movement/Walk" to="PlayerStateHandler" method="_on_walk_state_physics_processing"]
 [connection signal="state_entered" from="StateChart/ParallelState/Movement/Run" to="PlayerStateHandler" method="_on_run_state_entered"]
@@ -506,3 +621,9 @@ zoom = Vector2(3, 3)
 [connection signal="state_physics_processing" from="StateChart/ParallelState/Movement/Fall" to="PlayerStateHandler" method="_on_fall_state_physics_processing"]
 [connection signal="state_entered" from="StateChart/ParallelState/Movement/Idle" to="PlayerStateHandler" method="_on_idle_state_entered"]
 [connection signal="state_physics_processing" from="StateChart/ParallelState/Movement/Idle" to="PlayerStateHandler" method="_on_idle_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/ParallelState/Attack/Attack" to="PlayerStateHandler" method="_on_attack_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/ParallelState/Attack/Attack" to="." method="_on_attack_state_physics_processing"]
+[connection signal="state_physics_processing" from="StateChart/ParallelState/Attack/Attack" to="PlayerStateHandler" method="_on_attack_state_physics_processing"]
+[connection signal="state_entered" from="StateChart/ParallelState/Attack/NotAttack" to="PlayerStateHandler" method="_on_not_attack_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/ParallelState/Attack/NotAttack" to="PlayerStateHandler" method="_on_not_attack_state_physics_processing"]
+[connection signal="timeout" from="Timers/attack_timer" to="PlayerStateHandler" method="_on_attack_timer_timeout"]

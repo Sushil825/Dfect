@@ -68,6 +68,8 @@ run={
 [layer_names]
 
 2d_physics/layer_1="Player"
+2d_physics/layer_2="Enemy"
+2d_physics/layer_7="Platform"
 2d_physics/layer_8="Tile"
 
 [physics]

@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://k3ibx5aql2ry"]
+
+[ext_resource type="Script" uid="uid://c6n0usjaa774b" path="res://Scenes/Enemy/Enemies/slime.gd" id="1_ef8sb"]
+[ext_resource type="Resource" uid="uid://c2p238vbe1lpe" path="res://Scripts/resource/slime.tres" id="2_ef8sb"]
+[ext_resource type="Texture2D" uid="uid://c6qcdvbxc8bje" path="res://Assets/free-field-enemies-pixel-art-for-tower-defense/1/S_Walk.png" id="3_s5w6w"]
+[ext_resource type="Script" uid="uid://couw105c3bde4" path="res://addons/godot_state_charts/state_chart.gd" id="4_jhm83"]
+[ext_resource type="Script" uid="uid://jk2jm1g6q853" path="res://addons/godot_state_charts/compound_state.gd" id="5_k1a15"]
+[ext_resource type="Script" uid="uid://cytafq8i1y8qm" path="res://addons/godot_state_charts/atomic_state.gd" id="6_vpxlh"]
+[ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="7_vpxlh"]
+[ext_resource type="Script" uid="uid://bowl3ohhefr12" path="res://Scripts/Components/hurt_box.gd" id="8_goi36"]
+[ext_resource type="Script" uid="uid://b7u8j8k6amgm8" path="res://Scripts/Components/health_component.gd" id="9_edjrn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jhm83"]
+atlas = ExtResource("3_s5w6w")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oxu4g"]
+atlas = ExtResource("3_s5w6w")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k1a15"]
+atlas = ExtResource("3_s5w6w")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vpxlh"]
+atlas = ExtResource("3_s5w6w")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_goi36"]
+atlas = ExtResource("3_s5w6w")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_edjrn"]
+atlas = ExtResource("3_s5w6w")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sv82k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jhm83")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oxu4g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k1a15")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vpxlh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_goi36")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_edjrn")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vpxlh"]
+size = Vector2(16, 10)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_edjrn"]
+radius = 9.333334
+height = 18.666668
+
+[node name="Slime" type="CharacterBody2D" unique_id=1807940732]
+z_index = 2
+scale = Vector2(1.5, 1.5)
+collision_layer = 2
+collision_mask = 128
+script = ExtResource("1_ef8sb")
+enemy_stat = ExtResource("2_ef8sb")
+metadata/_custom_type_script = "uid://b15abpjcg0uf5"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1335056147]
+sprite_frames = SubResource("SpriteFrames_sv82k")
+animation = &"idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1510522803]
+visible = false
+position = Vector2(0, 7)
+shape = SubResource("RectangleShape2D_vpxlh")
+
+[node name="StateChart" type="Node" parent="." unique_id=1014146515]
+unique_name_in_owner = true
+script = ExtResource("4_jhm83")
+metadata/_custom_type_script = "uid://couw105c3bde4"
+
+[node name="Normal" type="Node" parent="StateChart" unique_id=79345982]
+script = ExtResource("5_k1a15")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateChart/Normal" unique_id=102330604]
+script = ExtResource("6_vpxlh")
+
+[node name="Transition" type="Node" parent="StateChart/Normal/Idle" unique_id=629280116]
+script = ExtResource("7_vpxlh")
+to = NodePath("../../Walk")
+event = &"idle_to_walk"
+delay_in_seconds = "0.0"
+
+[node name="Walk" type="Node" parent="StateChart/Normal" unique_id=1059062372]
+script = ExtResource("6_vpxlh")
+
+[node name="Transition" type="Node" parent="StateChart/Normal/Walk" unique_id=972259474]
+script = ExtResource("7_vpxlh")
+to = NodePath("../../Idle")
+event = &"walk_to_idle"
+delay_in_seconds = "0.0"
+
+[node name="Attack" type="Node" parent="StateChart/Normal" unique_id=842298188]
+script = ExtResource("6_vpxlh")
+
+[node name="Death" type="Node" parent="StateChart/Normal" unique_id=697652894]
+script = ExtResource("6_vpxlh")
+
+[node name="HurtBox" type="Area2D" parent="." unique_id=637313316]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("8_goi36")
+metadata/_custom_type_script = "uid://bowl3ohhefr12"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox" unique_id=2098715643]
+self_modulate = Color(0.7717115, 0.43333945, 0.24486643, 1)
+position = Vector2(0, 6.666667)
+shape = SubResource("CapsuleShape2D_edjrn")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=4468669]
+script = ExtResource("9_edjrn")
+metadata/_custom_type_script = "uid://b7u8j8k6amgm8"
+
+[connection signal="state_entered" from="StateChart/Normal/Idle" to="." method="_on_idle_state_entered"]
+[connection signal="state_physics_processing" from="StateChart/Normal/Idle" to="." method="_on_idle_state_physics_processing"]
+[connection signal="hit_received" from="HurtBox" to="." method="_on_hurt_box_hit_received"]
