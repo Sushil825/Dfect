@@ -17,7 +17,9 @@
 [ext_resource type="Texture2D" uid="uid://bkkdqwc4mqm7r" path="res://Assets/male_hero_free/individual_sheets/male_hero-run.png" id="8_dey5f"]
 [ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="8_jlvik"]
 [ext_resource type="Script" uid="uid://c76lonbrgrna8" path="res://Scripts/Components/hit_box.gd" id="15_dey5f"]
-[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="18_hnuln"]
+[ext_resource type="AudioStream" uid="uid://6pbiabcht5it" path="res://Assets/sounds/sfx/sword.wav" id="18_hnuln"]
+[ext_resource type="Script" uid="uid://bowl3ohhefr12" path="res://Scripts/Components/hurt_box.gd" id="19_aqm4k"]
+[ext_resource type="Script" uid="uid://b7u8j8k6amgm8" path="res://Scripts/Components/health_component.gd" id="20_rcvs5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1agin"]
 atlas = ExtResource("4_7g0yx")
@@ -210,10 +212,10 @@ region = Rect2(1152, 0, 128, 128)
 [sub_resource type="SpriteFrames" id="SpriteFrames_06tpx"]
 animations = [{
 "frames": [{
-"duration": 2.0,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_1agin")
 }, {
-"duration": 2.0,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_2jnj1")
 }, {
 "duration": 1.0,
@@ -221,7 +223,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack",
-"speed": 4.0
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -422,6 +424,9 @@ _data = {
 &"attack_animation": SubResource("Animation_r5xpd")
 }
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_aqm4k"]
+height = 34.0
+
 [node name="Player" type="CharacterBody2D" unique_id=864730155]
 z_index = 10
 y_sort_enabled = true
@@ -584,6 +589,7 @@ delay_in_seconds = "0.0"
 zoom = Vector2(3, 3)
 
 [node name="HitBox" type="Area2D" parent="." unique_id=174092556]
+visible = false
 collision_layer = 4
 collision_mask = 4
 monitoring = false
@@ -603,12 +609,27 @@ libraries/ = SubResource("AnimationLibrary_ks1b7")
 
 [node name="attack_timer" type="Timer" parent="Timers" unique_id=1568268871]
 
-[node name="StateChartDebugger" parent="." unique_id=489938885 instance=ExtResource("18_hnuln")]
-offset_left = -320.0
-offset_top = -181.0
-offset_right = -36.0
-offset_bottom = -43.0
-initial_node_to_watch = NodePath("../StateChart")
+[node name="coyote_timer" type="Timer" parent="Timers" unique_id=1233630413]
+one_shot = true
+
+[node name="sword_attack" type="AudioStreamPlayer2D" parent="." unique_id=1484874881]
+stream = ExtResource("18_hnuln")
+
+[node name="HurtBox" type="Area2D" parent="." unique_id=1268473495]
+collision_layer = 16
+collision_mask = 128
+script = ExtResource("19_aqm4k")
+metadata/_custom_type_script = "uid://bowl3ohhefr12"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox" unique_id=76660457]
+position = Vector2(6, 0)
+shape = SubResource("CapsuleShape2D_aqm4k")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=2083525996]
+script = ExtResource("20_rcvs5")
+max_health = 100
+health = 100
+metadata/_custom_type_script = "uid://b7u8j8k6amgm8"
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="PlayerStateHandler" method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="state_entered" from="StateChart/ParallelState/Movement/Walk" to="PlayerStateHandler" method="_on_walk_state_entered"]
@@ -627,3 +648,5 @@ initial_node_to_watch = NodePath("../StateChart")
 [connection signal="state_entered" from="StateChart/ParallelState/Attack/NotAttack" to="PlayerStateHandler" method="_on_not_attack_state_entered"]
 [connection signal="state_physics_processing" from="StateChart/ParallelState/Attack/NotAttack" to="PlayerStateHandler" method="_on_not_attack_state_physics_processing"]
 [connection signal="timeout" from="Timers/attack_timer" to="PlayerStateHandler" method="_on_attack_timer_timeout"]
+[connection signal="timeout" from="Timers/coyote_timer" to="PlayerStateHandler" method="_on_coyote_timer_timeout"]
+[connection signal="hit_received" from="HurtBox" to="PlayerStateHandler" method="_on_hurt_box_hit_received"]

@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://lhxnixd8ng47" path="res://Scenes/World/decorations/bush.tscn" id="2_dqviv"]
 [ext_resource type="PackedScene" uid="uid://qjougta1wy43" path="res://Scenes/Interactables/platform.tscn" id="3_5gq5a"]
 [ext_resource type="Script" uid="uid://jp86q2jvvy0e" path="res://Scenes/World/tile_map_layer.gd" id="3_qwyom"]
+[ext_resource type="PackedScene" uid="uid://qjhh28di4fxt" path="res://Scenes/World/Traps/wooden_trap.tscn" id="4_7q1dn"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ptwdb"]
 texture = ExtResource("1_1meyk")
@@ -704,13 +705,18 @@ scenes/1/scene = ExtResource("2_dqviv")
 resource_name = "Platforms"
 scenes/1/scene = ExtResource("3_5gq5a")
 
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_8yxnf"]
+resource_name = "Traps"
+scenes/1/scene = ExtResource("4_7q1dn")
+
 [sub_resource type="TileSet" id="TileSet_qyqqb"]
-physics_layer_0/collision_layer = 128
+physics_layer_0/collision_layer = 64
 custom_data_layer_0/name = "slope"
 custom_data_layer_0/type = 1
 sources/0 = SubResource("TileSetAtlasSource_ptwdb")
 sources/1 = SubResource("TileSetScenesCollectionSource_qwyom")
 sources/2 = SubResource("TileSetScenesCollectionSource_7q1dn")
+sources/3 = SubResource("TileSetScenesCollectionSource_8yxnf")
 
 [node name="TileMapLayer" type="TileMapLayer" unique_id=126119456]
 z_index = 1

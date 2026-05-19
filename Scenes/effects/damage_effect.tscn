@@ -1,0 +1,39 @@
+[gd_scene format=3 uid="uid://7oy6waga7igu"]
+
+[ext_resource type="Script" uid="uid://baeh7hw46h8gn" path="res://Scenes/effects/damage_effect.gd" id="1_jer6x"]
+
+[sub_resource type="Curve" id="Curve_jte5s"]
+_data = [Vector2(0.005940594, 0.9860316), 0.0, 0.0, 0, 0, Vector2(0.48712873, 0.4623338), 0.0, 0.0, 0, 0, Vector2(1, 0.0110782385), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_jer6x"]
+curve = SubResource("Curve_jte5s")
+
+[sub_resource type="Curve" id="Curve_xx8te"]
+_data = [Vector2(0.015841585, 0.035081267), 0.0, 0.0, 0, 0, Vector2(0.5049505, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_2m6r4"]
+curve = SubResource("Curve_xx8te")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_by80m"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = 14.999977
+gravity = Vector3(0, 0, 0)
+radial_accel_min = 14.999997
+radial_accel_max = 29.999996
+scale_max = 4.0
+scale_curve = SubResource("CurveTexture_2m6r4")
+alpha_curve = SubResource("CurveTexture_jer6x")
+
+[node name="DamageEffect" type="Node2D" unique_id=607964935]
+script = ExtResource("1_jer6x")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1733333912]
+amount = 120
+lifetime = 0.5
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_by80m")

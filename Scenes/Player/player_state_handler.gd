@@ -6,20 +6,43 @@ class_name PlayerStateHandler
 @export var weapon_stats:Weapon
 @onready var animated_sprite_2d: AnimatedSprite2D = %AnimatedSprite2D
 @onready var state_chart: StateChart = $"../StateChart"
-
-@onready var hit_box: HitBox = $"../HitBox"
 @onready var animation_player: AnimationPlayer = %AnimationPlayer
+
+
+
+#Componennt
+@onready var hit_box: HitBox = $"../HitBox"
+@onready var hurt_box: HurtBox = $"../HurtBox"
+@onready var health_component: HealthComponent = $"../HealthComponent"
 
 
 #Timers
 @export var attack_timer:Timer
+@onready var coyote_timer: Timer = $"../Timers/coyote_timer"
 
+
+
+
+
+
+
+
+#SFX and music
+
+@onready var sword_attack: AudioStreamPlayer2D = $"../sword_attack"
 
 #Signals
 
 
 
+#Coyote
+var can_coyote_jump:=false
+var was_on_floor:=false
+
+
+
 var can_attack:bool=true
+var is_attacking:bool=false
 
 
 func _ready() -> void:
@@ -27,6 +50,17 @@ func _ready() -> void:
 	
 	hit_box.monitoring=false
 	hit_box.damage=weapon_stats.attack_base_damage
+	
+	
+
+func _physics_process(delta: float) -> void:
+	if was_on_floor and !player.is_on_floor():
+		can_coyote_jump=true
+		coyote_timer.start()
+		
+	was_on_floor=player.is_on_floor()
+
+
 func _process(delta: float) -> void:
 	handle_input()
 
@@ -64,6 +98,7 @@ func _on_idle_state_entered() -> void:
 	handle_animation("idle")
 
 func _on_walk_state_physics_processing(delta: float) -> void:
+
 	player.velocity.x=player_stats.walk_speed*player.direction.x
 	if player.is_on_floor():
 		if Input.get_axis("go_left","go_right")==0:
@@ -110,7 +145,8 @@ func _on_fall_state_physics_processing(delta: float) -> void:
 	if player.is_on_floor():
 		state_chart.send_event("fall_to_idle")
 		
-		
+	
+	
 	if Input.get_axis("go_left","go_right"):
 		player.velocity.x=(player_stats.walk_speed*player.direction.x)
 
@@ -138,13 +174,17 @@ func _on_run_state_entered() -> void:
 func _on_attack_state_entered() -> void:
 	if can_attack:
 		animation_player.play("attack_animation")
+		sword_attack.play()
+		
+		is_attacking=true
 	can_attack=false
 	
 func _on_attack_state_physics_processing(delta: float) -> void:
 	pass
 
 func _on_not_attack_state_entered() -> void:
-	pass
+	is_attacking=false
+	
 
 
 func _on_not_attack_state_physics_processing(delta: float) -> void:
@@ -184,3 +224,11 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 			handle_animation("run")
 		else:
 			handle_animation("walk")
+
+
+func _on_hurt_box_hit_received(hitbos: HitBox) -> void:
+	pass
+
+
+func _on_coyote_timer_timeout() -> void:
+	can_coyote_jump=false

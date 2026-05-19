@@ -3,7 +3,7 @@ extends BaseEnemy
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 
 @onready var health_component: HealthComponent = $HealthComponent
-
+@export var on_damage:PackedScene
 
 
 
@@ -35,3 +35,7 @@ func _on_idle_state_physics_processing(delta: float) -> void:
 
 func _on_hurt_box_hit_received(hitbox: HitBox) -> void:
 	health_component.take_damage(hitbox.damage)
+	var new_damage=on_damage.instantiate()
+	add_child(new_damage)
+	
+	

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c6n0usjaa774b" path="res://Scenes/Enemy/Enemies/slime.gd" id="1_ef8sb"]
 [ext_resource type="Resource" uid="uid://c2p238vbe1lpe" path="res://Scripts/resource/slime.tres" id="2_ef8sb"]
+[ext_resource type="PackedScene" uid="uid://7oy6waga7igu" path="res://Scenes/effects/damage_effect.tscn" id="2_sv82k"]
 [ext_resource type="Texture2D" uid="uid://c6qcdvbxc8bje" path="res://Assets/free-field-enemies-pixel-art-for-tower-defense/1/S_Walk.png" id="3_s5w6w"]
 [ext_resource type="Script" uid="uid://couw105c3bde4" path="res://addons/godot_state_charts/state_chart.gd" id="4_jhm83"]
 [ext_resource type="Script" uid="uid://jk2jm1g6q853" path="res://addons/godot_state_charts/compound_state.gd" id="5_k1a15"]
@@ -73,6 +74,7 @@ scale = Vector2(1.5, 1.5)
 collision_layer = 2
 collision_mask = 128
 script = ExtResource("1_ef8sb")
+on_damage = ExtResource("2_sv82k")
 enemy_stat = ExtResource("2_ef8sb")
 metadata/_custom_type_script = "uid://b15abpjcg0uf5"
 

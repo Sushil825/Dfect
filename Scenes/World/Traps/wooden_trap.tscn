@@ -1,0 +1,123 @@
+[gd_scene format=3 uid="uid://qjhh28di4fxt"]
+
+[ext_resource type="Script" uid="uid://iotwm3prepm5" path="res://Scenes/World/Traps/wooden_trap.gd" id="1_ddlxe"]
+[ext_resource type="Texture2D" uid="uid://bejyfc8cv0l0w" path="res://Assets/Traps_&_Props_Free/Traps/Wood_Trap.png" id="2_qar6o"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ddlxe"]
+atlas = ExtResource("2_qar6o")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qar6o"]
+atlas = ExtResource("2_qar6o")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_quyjy"]
+atlas = ExtResource("2_qar6o")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mw0x7"]
+atlas = ExtResource("2_qar6o")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ejb16"]
+atlas = ExtResource("2_qar6o")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0iat4"]
+atlas = ExtResource("2_qar6o")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1xysp"]
+atlas = ExtResource("2_qar6o")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6471r"]
+atlas = ExtResource("2_qar6o")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yws2c"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ddlxe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qar6o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_quyjy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mw0x7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ejb16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0iat4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1xysp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6471r")
+}],
+"loop": true,
+"name": &"trap_cycle",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ddlxe"]
+size = Vector2(32, 21)
+
+[sub_resource type="Animation" id="Animation_qar6o"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_ddlxe"]
+resource_name = "attack"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.033333335, 0.23333333),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"disable_hitbox"
+}, {
+"args": [],
+"method": &"enable_hitbox"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qar6o"]
+_data = {
+&"RESET": SubResource("Animation_qar6o"),
+&"attack": SubResource("Animation_ddlxe")
+}
+
+[node name="WoodenTrap" type="Area2D" unique_id=1472026593]
+collision_layer = 128
+collision_mask = 16
+script = ExtResource("1_ddlxe")
+damage = 20
+metadata/_custom_type_script = "uid://btq00ru3knhff"
+
+[node name="frames" type="AnimatedSprite2D" parent="." unique_id=958890459]
+sprite_frames = SubResource("SpriteFrames_yws2c")
+animation = &"trap_cycle"
+autoplay = "trap_cycle"
+frame = 7
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1248604714]
+position = Vector2(0, 5.5)
+shape = SubResource("RectangleShape2D_ddlxe")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1783443717]
+libraries/ = SubResource("AnimationLibrary_qar6o")
