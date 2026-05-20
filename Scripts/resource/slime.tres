@@ -4,7 +4,6 @@
 
 [resource]
 script = ExtResource("1_qeles")
-walk_speed = 80
-damage = 5
-health = 30
+attack_range = Vector2(120, 30)
+chase_range = Vector2(180, 60)
 metadata/_custom_type_script = "uid://c23b73mitbcpp"
