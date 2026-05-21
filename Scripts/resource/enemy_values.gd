@@ -9,3 +9,4 @@ class_name EnemyStats
 @export var attack_cd:int=2
 @export var attack_range:Vector2=Vector2(10,100)
 @export var chase_range:Vector2=Vector2(20,100)
+@export var max_jumps:int=1

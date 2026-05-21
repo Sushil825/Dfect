@@ -40,6 +40,8 @@ var can_coyote_jump:=false
 var was_on_floor:=false
 
 
+var _current_jumps:int=1
+
 
 var can_attack:bool=true
 var is_attacking:bool=false
@@ -51,7 +53,12 @@ func _ready() -> void:
 	hit_box.monitoring=false
 	hit_box.damage=weapon_stats.attack_base_damage
 	
-	
+
+#All Things irresepective of states happens
+
+func do_jump():
+	player.velocity.y=player_stats.jump_force
+
 
 func _physics_process(delta: float) -> void:
 	if was_on_floor and !player.is_on_floor():
@@ -82,6 +89,14 @@ func handle_animation(anim:String):
 
 
 
+#All Things irresepective of states happens (UP) 
+
+
+
+
+#IDle state
+
+
 func _on_idle_state_physics_processing(delta: float) -> void:
 	
 	if player.is_on_floor():
@@ -96,6 +111,13 @@ func _on_idle_state_physics_processing(delta: float) -> void:
 func _on_idle_state_entered() -> void:
 	player.velocity.x=0
 	handle_animation("idle")
+
+
+
+
+
+#Walk State
+
 
 func _on_walk_state_physics_processing(delta: float) -> void:
 
@@ -119,7 +141,19 @@ func _on_walk_state_entered() -> void:
 	handle_animation("walk")
 
 
+
+
+
+
+#Jump State
+
 func _on_jump_state_physics_processing(delta: float) -> void:
+	
+	if player_stats.max_jumps>_current_jumps:
+		if Input.is_action_just_pressed("jump"):
+			do_jump()
+			_current_jumps+=1
+	
 	if player.velocity.y>=0:
 		state_chart.send_event("jump_to_fall")
 		
@@ -135,14 +169,28 @@ func _on_jump_state_physics_processing(delta: float) -> void:
 
 func _on_jump_state_entered() -> void:
 	handle_animation("jump")
-	player.velocity.y=player_stats.jump_force
+	do_jump()
+	_current_jumps+=1
 
+
+
+
+
+#Fall state
 
 func _on_fall_state_entered() -> void:
 	handle_animation("fall")
 	
 func _on_fall_state_physics_processing(delta: float) -> void:
+	
+	
+	if player_stats.max_jumps>_current_jumps:
+		if Input.is_action_just_pressed("jump"):
+			do_jump()
+			_current_jumps+=1
+	
 	if player.is_on_floor():
+		_current_jumps=0
 		state_chart.send_event("fall_to_idle")
 		
 	
@@ -150,6 +198,11 @@ func _on_fall_state_physics_processing(delta: float) -> void:
 	if Input.get_axis("go_left","go_right"):
 		player.velocity.x=(player_stats.walk_speed*player.direction.x)
 
+
+
+
+
+#Run state
 
 func _on_run_state_physics_processing(delta: float) -> void:
 	player.velocity.x=player_stats.run_speed*player.direction.x
@@ -170,6 +223,11 @@ func _on_run_state_physics_processing(delta: float) -> void:
 func _on_run_state_entered() -> void:
 	handle_animation("run")
 
+
+
+
+
+#Attack state
 
 func _on_attack_state_entered() -> void:
 	if can_attack:
@@ -193,8 +251,8 @@ func _on_not_attack_state_physics_processing(delta: float) -> void:
 
 
 
-	
-	
+#Attack functions
+
 func enable_hitbox():
 	hit_box.monitoring=true
 	animated_sprite_2d.play("attack")
@@ -202,6 +260,9 @@ func enable_hitbox():
 		sword_collider.position.x=abs(sword_collider.position.x)
 	elif player.direction==Vector2.LEFT:
 		sword_collider.position.x=-abs(sword_collider.position.x)
+		
+		
+
 func disable_hitbox():
 	hit_box.monitoring=false
 	attack_timer.start()

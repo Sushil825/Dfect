@@ -542,6 +542,12 @@ to = NodePath("../../Idle")
 event = &"fall_to_idle"
 delay_in_seconds = "0.0"
 
+[node name="Transition" type="Node" parent="StateChart/ParallelState/Movement/Fall" unique_id=1912086359]
+script = ExtResource("8_jlvik")
+to = NodePath("../../Jump")
+event = &"fall_to_jump"
+delay_in_seconds = "0.0"
+
 [node name="Idle" type="Node" parent="StateChart/ParallelState/Movement" unique_id=1328408800]
 script = ExtResource("7_gk6dx")
 

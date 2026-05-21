@@ -115,7 +115,7 @@ func _on_chase_state_physics_processing(delta: float) -> void:
 		_player_direction=(_target.global_position-global_position).normalized()
 		var distance = global_position.distance_to(_target.global_position)
 
-		if distance > 64:
+		if distance > 35:
 			velocity.x = enemy_stat.chase_speed * _player_direction.x
 		else:
 			velocity.x = 0

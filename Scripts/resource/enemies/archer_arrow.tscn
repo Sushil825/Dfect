@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://btdxi4scohrex"]
+
+[ext_resource type="Texture2D" uid="uid://bnpkuji0qj0dm" path="res://Assets/Bow and Arrows.png" id="1_luwik"]
+[ext_resource type="Script" uid="uid://b0xa0s1cjfbqw" path="res://Scripts/resource/enemies/archer_arrow.gd" id="2_mhh6f"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mhh6f"]
+size = Vector2(16, 6)
+
+[node name="ArcherArrow" type="Sprite2D" unique_id=1466108215]
+scale = Vector2(1.5, 1)
+texture = ExtResource("1_luwik")
+region_enabled = true
+region_rect = Rect2(0, 36, 16, 7)
+script = ExtResource("2_mhh6f")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1714262298]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=624301062]
+shape = SubResource("RectangleShape2D_mhh6f")
