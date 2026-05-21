@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cglwa75kd0xc5"]
 
 [ext_resource type="Script" uid="uid://dx75nu6uxl58a" path="res://Scenes/Enemy/Enemies/archer.gd" id="1_vq7wr"]
+[ext_resource type="Shader" uid="uid://bwew57u8esq13" path="res://Scripts/shaders/flash.gdshader" id="1_xxq3o"]
 [ext_resource type="Resource" uid="uid://4h1i68v8ams8" path="res://Scripts/resource/enemies/archer.tres" id="2_1xio2"]
 [ext_resource type="PackedScene" uid="uid://btdxi4scohrex" path="res://Scripts/resource/enemies/archer_arrow.tscn" id="2_d32xt"]
 [ext_resource type="Texture2D" uid="uid://dbag7khinehcc" path="res://Assets/Final/Normal Attack.png" id="2_ht6o7"]
@@ -13,6 +14,16 @@
 [ext_resource type="Script" uid="uid://cytafq8i1y8qm" path="res://addons/godot_state_charts/atomic_state.gd" id="9_a41pq"]
 [ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="11_a41pq"]
 [ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="12_4fio5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hjk21"]
+shader = ExtResource("1_xxq3o")
+shader_parameter/active = false
+shader_parameter/tint = Color(1, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xxq3o"]
+shader = ExtResource("1_xxq3o")
+shader_parameter/active = false
+shader_parameter/tint = Color(1, 1, 0, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pvjrd"]
 atlas = ExtResource("2_ht6o7")
@@ -274,6 +285,7 @@ _data = {
 }
 
 [node name="Archer" type="CharacterBody2D" unique_id=1667011664]
+material = SubResource("ShaderMaterial_hjk21")
 collision_layer = 2
 collision_mask = 64
 script = ExtResource("1_vq7wr")
@@ -282,15 +294,18 @@ idle_timer_max = 4.0
 walk_timer_min = 5.0
 walk_timer_max = 8.0
 arrow = ExtResource("2_d32xt")
+time_to_forget_player = 2.0
+dashing_cd = 3.0
+dashing_range = 1000.0
+dash_duration = 0.3
 enemy_stat = ExtResource("2_1xio2")
 metadata/_custom_type_script = "uid://b15abpjcg0uf5"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1403961444]
+material = SubResource("ShaderMaterial_xxq3o")
 sprite_frames = SubResource("SpriteFrames_y06if")
-animation = &"attack"
+animation = &"dash"
 autoplay = "idle"
-frame = 7
-frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1118147243]
 position = Vector2(0, 2.5)
@@ -302,6 +317,8 @@ metadata/_custom_type_script = "uid://b7u8j8k6amgm8"
 
 [node name="HurtBox" type="Area2D" parent="." unique_id=1124928907]
 visible = false
+collision_layer = 4
+collision_mask = 0
 script = ExtResource("6_sdvcj")
 metadata/_custom_type_script = "uid://bowl3ohhefr12"
 
@@ -368,6 +385,12 @@ to = NodePath("../../Idle")
 event = &"bail_to_idle"
 delay_in_seconds = "0.0"
 
+[node name="to_dash" type="Node" parent="StateChart/CompoundState/Bail" unique_id=612181380]
+script = ExtResource("11_a41pq")
+to = NodePath("../../Dash")
+event = &"bail_to_dash"
+delay_in_seconds = "0.0"
+
 [node name="Attack" type="Node" parent="StateChart/CompoundState" unique_id=1335015676]
 script = ExtResource("9_a41pq")
 
@@ -379,6 +402,12 @@ delay_in_seconds = "0.0"
 
 [node name="Dash" type="Node" parent="StateChart/CompoundState" unique_id=770559238]
 script = ExtResource("9_a41pq")
+
+[node name="to_idle" type="Node" parent="StateChart/CompoundState/Dash" unique_id=810770096]
+script = ExtResource("11_a41pq")
+to = NodePath("../../Idle")
+event = &"dash_to_idle"
+delay_in_seconds = "0.0"
 
 [node name="Timers" type="Node" parent="." unique_id=1687162024]
 
@@ -392,6 +421,9 @@ wait_time = 2.0
 one_shot = true
 
 [node name="DashTimer" type="Timer" parent="Timers" unique_id=596574927]
+one_shot = true
+
+[node name="PlayerForget" type="Timer" parent="Timers" unique_id=390391688]
 
 [node name="RayCasts" type="Node2D" parent="." unique_id=1146726976]
 
@@ -402,6 +434,16 @@ collision_mask = 64
 
 [node name="isGround" type="RayCast2D" parent="RayCasts" unique_id=259260023]
 position = Vector2(45, 0)
+target_position = Vector2(0, 32)
+collision_mask = 64
+
+[node name="Dashablex" type="RayCast2D" parent="RayCasts" unique_id=472183609]
+position = Vector2(1, 1)
+target_position = Vector2(200, 0)
+collision_mask = 64
+
+[node name="Dashabley" type="RayCast2D" parent="RayCasts" unique_id=456204335]
+position = Vector2(194, 1)
 target_position = Vector2(0, 32)
 collision_mask = 64
 
@@ -426,6 +468,7 @@ position = Vector2(16, -6)
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=279429260]
 libraries/ = SubResource("AnimationLibrary_xxq3o")
 
+[connection signal="hit_received" from="HurtBox" to="." method="_on_hurt_box_hit_received"]
 [connection signal="state_entered" from="StateChart/CompoundState/Idle" to="." method="_on_idle_state_entered"]
 [connection signal="state_physics_processing" from="StateChart/CompoundState/Idle" to="." method="_on_idle_state_physics_processing"]
 [connection signal="state_entered" from="StateChart/CompoundState/Walk" to="." method="_on_walk_state_entered"]
@@ -439,5 +482,7 @@ libraries/ = SubResource("AnimationLibrary_xxq3o")
 [connection signal="timeout" from="Timers/IdleTimer" to="." method="_on_idle_timer_timeout"]
 [connection signal="timeout" from="Timers/AttackTimer" to="." method="_on_attack_timer_timeout"]
 [connection signal="timeout" from="Timers/WalkTimer" to="." method="_on_walk_timer_timeout"]
+[connection signal="timeout" from="Timers/DashTimer" to="." method="_on_dash_timer_timeout"]
+[connection signal="timeout" from="Timers/PlayerForget" to="." method="_on_player_forget_timeout"]
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]

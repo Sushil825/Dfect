@@ -4,8 +4,9 @@
 
 [resource]
 script = ExtResource("1_yjjas")
-walk_speed = 60
-chase_speed = 150
+walk_speed = 100
+chase_speed = 200
 damage = 10
-health = 50
+health = 80
+attack_cd = 3
 metadata/_custom_type_script = "uid://c23b73mitbcpp"

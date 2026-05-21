@@ -8,7 +8,9 @@ var _player_direction:Vector2=Vector2.ZERO
 var _target:Player=null
 var _can_attack:bool=true
 var _gravity:=980
-
+var _can_dash:=false
+var _dash_range:=200
+var _is_dashing:=false
 
 #Onreadies
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
@@ -18,7 +20,9 @@ var _gravity:=980
 @onready var detection_area: Area2D = $DetectionArea
 @onready var arrow_spawn: Marker2D = $ArrowSpawn
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
-
+@onready var player_forget: Timer = $Timers/PlayerForget
+@onready var dashabley: RayCast2D = $RayCasts/Dashabley
+@onready var dashablex: RayCast2D = $RayCasts/Dashablex
 
 
 
@@ -30,7 +34,10 @@ var _gravity:=980
 @export var walk_timer_min:float
 @export var walk_timer_max:float
 @export var arrow:PackedScene
-
+@export var time_to_forget_player:float
+@export var dashing_cd:float
+@export var dashing_range:float
+@export var dash_duration:float
 
 
 #Timers
@@ -53,6 +60,20 @@ var _gravity:=980
 
 
 
+#Shader functions
+
+
+func flash(color:Color,time:float):
+	var mat=animated_sprite_2d.material
+	mat.set_shader_parameter("active",true)
+	mat.set_shader_parameter("tint",color)
+	await get_tree().create_timer(time).timeout
+	mat.set_shader_parameter("active",false)
+
+
+
+
+
 #Signals
 
 
@@ -66,18 +87,24 @@ var _gravity:=980
 
 
 func _ready() -> void:
+	attack_timer.wait_time=enemy_stat.attack_cd
 	idle_timer.wait_time=randf_range(idle_timer_min,idle_timer_max)
 	walk_timer.wait_time=randf_range(walk_timer_min,walk_timer_max)
-	
+	player_forget.wait_time=time_to_forget_player
+	dash_timer.wait_time=dashing_cd
+	dash_timer.start()
+	health_component.max_health=enemy_stat.health
+	health_component.health=enemy_stat.health
 	
 
 func apply_gravity(_delta:float):
 	if !self.is_on_floor():
-		velocity.y+=_gravity*_delta
+		
+		if not _is_dashing:
+			velocity.y+=_gravity*_delta
 
 
 func _physics_process(delta: float) -> void:
-	
 	apply_gravity(delta)
 	move_and_slide()
 
@@ -99,6 +126,8 @@ func turn():
 	is_ground.position.x*=-1
 	detection_area.scale.x*=-1
 	arrow_spawn.position.x*=-1
+	dashablex.target_position.x*=-1
+	dashabley.position.x*=-1
 
 
 func _on_idle_state_entered() -> void:
@@ -110,7 +139,9 @@ func _on_idle_state_entered() -> void:
 func _on_idle_state_physics_processing(delta: float) -> void:
 	
 	
-	pass
+	if _target:
+		if _can_attack:
+			state_chart.send_event("idle_to_attack")
 
 
 func _on_walk_state_entered() -> void:
@@ -119,6 +150,10 @@ func _on_walk_state_entered() -> void:
 
 
 func _on_walk_state_physics_processing(delta: float) -> void:
+	
+	if _target:
+		if _can_attack:
+			state_chart.send_event("walk_to_attack")
 	
 	self.velocity.x = enemy_stat.walk_speed * _direction.x
 	if is_wall.is_colliding():
@@ -132,6 +167,14 @@ func _on_walk_state_physics_processing(delta: float) -> void:
 
 
 func _on_attack_state_entered() -> void:
+	
+	
+	if _target.global_position.x>global_position.x and _direction.x<0:
+		turn()
+		
+	elif _target.global_position.x<global_position.x and _direction.x>0:
+		turn()
+	
 	velocity.x=0
 	_can_attack=false
 	handle_animation("attack")
@@ -143,11 +186,13 @@ func _on_attack_state_physics_processing(_delta: float) -> void:
 
 
 func _on_dash_state_entered() -> void:
-	pass # Replace with function body.
-
+	velocity.x=0
+	_can_dash=false
+	
+	state_chart.send_event("dash_to_bail")
 
 func _on_dash_state_physics_processing(_delta: float) -> void:
-	pass # Replace with function body.
+	pass
 
 
 
@@ -189,12 +234,19 @@ func _on_detection_area_body_entered(body: Node2D) -> void:
 
 
 func _on_detection_area_body_exited(body: Node2D) -> void:
-	_target=null
+	player_forget.start()
 
 
 func _on_bail_state_physics_processing(delta: float) -> void:
 	
-	
+		
+		
+		if _can_dash:
+			if not dashablex.is_colliding():
+				if dashabley.is_colliding():
+					state_chart.send_event("bail_to_dash")
+					print("Can dash")
+		
 		velocity.x=enemy_stat.chase_speed*_direction.x
 		
 		if not is_ground.is_colliding():
@@ -241,3 +293,21 @@ func _attack_done():
 	handle_animation("run")
 	attack_timer.start()
 	
+
+
+func _on_player_forget_timeout() -> void:
+	
+	for area in detection_area.get_overlapping_bodies():
+		if area is Player:
+			return
+	
+	_target=null
+
+
+func _on_dash_timer_timeout() -> void:
+	_can_dash=false
+
+
+func _on_hurt_box_hit_received(hitbos: HitBox) -> void:
+	health_component.take_damage(hitbos.damage)
+	flash(Color.RED,0.2)

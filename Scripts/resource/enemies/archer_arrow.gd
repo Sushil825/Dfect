@@ -12,4 +12,3 @@ func _physics_process(delta: float) -> void:
 		rotation_degrees=180
 	
 	position+=direction*speed*delta
-	print("Arrow spawned")
