@@ -16,6 +16,14 @@ class_name PlayerStateHandler
 @onready var health_component: HealthComponent = $"../HealthComponent"
 
 
+
+
+
+
+
+
+
+
 #Timers
 @export var attack_timer:Timer
 @onready var coyote_timer: Timer = $"../Timers/coyote_timer"
@@ -23,13 +31,14 @@ class_name PlayerStateHandler
 
 
 
-
-
-
-
 #SFX and music
 
 @onready var sword_attack: AudioStreamPlayer2D = $"../sword_attack"
+@onready var walk_sound: AudioStreamPlayer2D = $"../SFX/Walk"
+@onready var run_sound: AudioStreamPlayer2D = $"../SFX/Run"
+@onready var attack_sound: AudioStreamPlayer2D = $"../SFX/Attack"
+@onready var jump_sound: AudioStreamPlayer2D = $"../SFX/Jump"
+
 
 #Signals
 
@@ -110,7 +119,8 @@ func _on_idle_state_physics_processing(delta: float) -> void:
 
 func _on_idle_state_entered() -> void:
 	player.velocity.x=0
-	handle_animation("idle")
+	if not is_attacking:
+		handle_animation("idle")
 
 
 
@@ -138,7 +148,12 @@ func _on_walk_state_physics_processing(delta: float) -> void:
 
 
 func _on_walk_state_entered() -> void:
-	handle_animation("walk")
+	if not is_attacking:
+		handle_animation("walk")
+	if walk_sound.playing:
+		return
+	walk_sound.play()
+	
 
 
 
@@ -168,7 +183,9 @@ func _on_jump_state_physics_processing(delta: float) -> void:
 
 
 func _on_jump_state_entered() -> void:
-	handle_animation("jump")
+	if not is_attacking:
+		handle_animation("jump")
+	jump_sound.play()
 	do_jump()
 	_current_jumps+=1
 
@@ -179,7 +196,8 @@ func _on_jump_state_entered() -> void:
 #Fall state
 
 func _on_fall_state_entered() -> void:
-	handle_animation("fall")
+	if not is_attacking:
+		handle_animation("fall")
 	
 func _on_fall_state_physics_processing(delta: float) -> void:
 	
@@ -205,6 +223,10 @@ func _on_fall_state_physics_processing(delta: float) -> void:
 #Run state
 
 func _on_run_state_physics_processing(delta: float) -> void:
+	if run_sound.playing:
+		pass
+	else:
+		run_sound.play()
 	player.velocity.x=player_stats.run_speed*player.direction.x
 	if player.velocity.y>5:
 		state_chart.send_event("run_to_fall")
@@ -221,7 +243,8 @@ func _on_run_state_physics_processing(delta: float) -> void:
 
 
 func _on_run_state_entered() -> void:
-	handle_animation("run")
+	if not is_attacking:
+		handle_animation("run")
 
 
 
@@ -233,12 +256,14 @@ func _on_attack_state_entered() -> void:
 	if can_attack:
 		animation_player.play("attack_animation")
 		sword_attack.play()
+		attack_sound.play()
 		
 		is_attacking=true
 	can_attack=false
 	
 func _on_attack_state_physics_processing(delta: float) -> void:
-	pass
+	if not is_attacking:
+		state_chart.send_event("attack_to_na")
 
 func _on_not_attack_state_entered() -> void:
 	is_attacking=false
@@ -266,9 +291,8 @@ func enable_hitbox():
 func disable_hitbox():
 	hit_box.monitoring=false
 	attack_timer.start()
-	state_chart.send_event("attack_to_na")
-	animated_sprite_2d.play("attack_end")
-	
+	state_chart.send_event("attack_to_na")	
+	is_attacking=false
 	
 
 
@@ -278,18 +302,43 @@ func _on_attack_timer_timeout() -> void:
 
 
 func _on_animated_sprite_2d_animation_finished() -> void:
-	if animated_sprite_2d.animation=="attack_end":
+	if animated_sprite_2d.animation=="attack":
 		if player.velocity==Vector2.ZERO:
-			handle_animation("idle")
+			if not is_attacking:
+				handle_animation("idle")
 		elif Input.is_action_pressed("run"):
-			handle_animation("run")
+			if not is_attacking:
+				handle_animation("run")
 		else:
-			handle_animation("walk")
+			if not is_attacking:
+				handle_animation("walk")
 
 
 func _on_hurt_box_hit_received(hitbos: HitBox) -> void:
-	pass
+	print("hurtttt")
 
 
 func _on_coyote_timer_timeout() -> void:
 	can_coyote_jump=false
+	
+	
+	
+	
+	
+	
+
+
+func _on_walk_state_exited() -> void:
+	walk_sound.stop()
+
+
+func _on_run_state_exited() -> void:
+	run_sound.stop()
+
+
+func _on_block_state_entered() -> void:
+	handle_animation("block")
+
+
+func _on_block_state_physics_processing(delta: float) -> void:
+	pass # Replace with function body.

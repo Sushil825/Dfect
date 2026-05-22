@@ -30,3 +30,5 @@ func _on_area_entered(area:Area2D)->void:
 	_has_hit=true
 	hurtbox.take_hit(self)
 	hit.emit(hurtbox)
+	if one_shot:
+		get_parent().queue_free()

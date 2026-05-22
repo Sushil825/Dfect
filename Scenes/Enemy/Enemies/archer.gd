@@ -34,6 +34,7 @@ var _is_dashing:=false
 @export var walk_timer_min:float
 @export var walk_timer_max:float
 @export var arrow:PackedScene
+@export var particle_effect:PackedScene
 @export var time_to_forget_player:float
 @export var dashing_cd:float
 @export var dashing_range:float
@@ -311,3 +312,6 @@ func _on_dash_timer_timeout() -> void:
 func _on_hurt_box_hit_received(hitbos: HitBox) -> void:
 	health_component.take_damage(hitbos.damage)
 	flash(Color.RED,0.2)
+	var new_effect=particle_effect.instantiate()
+	new_effect.global_position=global_position
+	get_tree().current_scene.add_child(new_effect)

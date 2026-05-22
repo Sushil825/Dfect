@@ -7,13 +7,13 @@
 [ext_resource type="Texture2D" uid="uid://dbag7khinehcc" path="res://Assets/Final/Normal Attack.png" id="2_ht6o7"]
 [ext_resource type="Texture2D" uid="uid://dac2r237rixcf" path="res://Assets/Final/Dash.png" id="3_pvjrd"]
 [ext_resource type="Texture2D" uid="uid://byjxsjoxex2r2" path="res://Assets/Final/Idle and running.png" id="3_y8vxe"]
+[ext_resource type="PackedScene" uid="uid://7oy6waga7igu" path="res://Scenes/effects/damage_effect.tscn" id="4_xxq3o"]
 [ext_resource type="Script" uid="uid://b7u8j8k6amgm8" path="res://Scripts/Components/health_component.gd" id="5_a2dy5"]
 [ext_resource type="Script" uid="uid://bowl3ohhefr12" path="res://Scripts/Components/hurt_box.gd" id="6_sdvcj"]
 [ext_resource type="Script" uid="uid://couw105c3bde4" path="res://addons/godot_state_charts/state_chart.gd" id="7_37rc3"]
 [ext_resource type="Script" uid="uid://jk2jm1g6q853" path="res://addons/godot_state_charts/compound_state.gd" id="8_1xio2"]
 [ext_resource type="Script" uid="uid://cytafq8i1y8qm" path="res://addons/godot_state_charts/atomic_state.gd" id="9_a41pq"]
 [ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="11_a41pq"]
-[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="12_4fio5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hjk21"]
 shader = ExtResource("1_xxq3o")
@@ -294,6 +294,7 @@ idle_timer_max = 4.0
 walk_timer_min = 5.0
 walk_timer_max = 8.0
 arrow = ExtResource("2_d32xt")
+particle_effect = ExtResource("4_xxq3o")
 time_to_forget_player = 2.0
 dashing_cd = 3.0
 dashing_range = 1000.0
@@ -446,13 +447,6 @@ collision_mask = 64
 position = Vector2(194, 1)
 target_position = Vector2(0, 32)
 collision_mask = 64
-
-[node name="StateChartDebugger" parent="." unique_id=2026637048 instance=ExtResource("12_4fio5")]
-offset_left = -139.0
-offset_top = -147.0
-offset_right = 4.0
-offset_bottom = -97.0
-initial_node_to_watch = NodePath("../StateChart")
 
 [node name="DetectionArea" type="Area2D" parent="." unique_id=1257877356]
 collision_layer = 0
