@@ -51,10 +51,13 @@ var was_on_floor:=false
 
 var _current_jumps:int=1
 
-
+#Locals vars
 var can_attack:bool=true
 var is_attacking:bool=false
 
+
+var can_block:=true
+var is_blocking:=false
 
 func _ready() -> void:
 	attack_timer.wait_time=weapon_stats.attack_cd
@@ -70,12 +73,8 @@ func do_jump():
 
 
 func _physics_process(delta: float) -> void:
-	if was_on_floor and !player.is_on_floor():
-		can_coyote_jump=true
-		coyote_timer.start()
-		
-	was_on_floor=player.is_on_floor()
-
+	
+	pass
 
 func _process(delta: float) -> void:
 	handle_input()
@@ -85,7 +84,7 @@ func handle_input():
 	player.check_direction()
 	if player.is_on_floor():
 		if Input.is_action_just_pressed("jump"):
-				state_chart.send_event("to_jump")
+			state_chart.send_event("to_jump")
 	if not player.is_on_floor():
 		pass
 
@@ -232,7 +231,7 @@ func _on_run_state_physics_processing(delta: float) -> void:
 		state_chart.send_event("run_to_fall")
 	
 	if Input.is_action_just_pressed("jump"):
-			state_chart.send_event("run_to_jump")
+		state_chart.send_event("run_to_jump")
 	
 	if not Input.is_action_pressed("run"):
 		if Input.get_axis("go_left","go_right")!=0:
@@ -267,10 +266,16 @@ func _on_attack_state_physics_processing(delta: float) -> void:
 
 func _on_not_attack_state_entered() -> void:
 	is_attacking=false
+	is_blocking=false
 	
 
 
 func _on_not_attack_state_physics_processing(delta: float) -> void:
+	
+	if Input.is_action_pressed("block"):
+		if can_block:
+			state_chart.send_event("na_to_block")
+	
 	if Input.is_action_just_pressed("attack") and can_attack:
 		state_chart.send_event("na_to_attack")
 
@@ -291,7 +296,7 @@ func enable_hitbox():
 func disable_hitbox():
 	hit_box.monitoring=false
 	attack_timer.start()
-	state_chart.send_event("attack_to_na")	
+	state_chart.send_event("attack_to_na")
 	is_attacking=false
 	
 
@@ -341,4 +346,5 @@ func _on_block_state_entered() -> void:
 
 
 func _on_block_state_physics_processing(delta: float) -> void:
-	pass # Replace with function body.
+	if not Input.is_action_pressed("block"):
+		state_chart.send_event("block_to_na")

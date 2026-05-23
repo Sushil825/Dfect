@@ -63,6 +63,7 @@
 [ext_resource type="Texture2D" uid="uid://b5umj3a7jkvll" path="res://Assets/Hero Knight/Sprites/HeroKnight/Run/HeroKnight_Run_7.png" id="33_gs43p"]
 [ext_resource type="Texture2D" uid="uid://bgpa5nbgknrm" path="res://Assets/Hero Knight/Sprites/HeroKnight/Run/HeroKnight_Run_8.png" id="34_oshob"]
 [ext_resource type="Texture2D" uid="uid://da72pqpvl4or7" path="res://Assets/Hero Knight/Sprites/HeroKnight/Run/HeroKnight_Run_9.png" id="35_4h47k"]
+[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="59_0a2xn"]
 [ext_resource type="AudioStream" uid="uid://cbtgefp28np44" path="res://Assets/sounds/freesounds123-heavy-character-walk-363348.mp3" id="60_grehw"]
 [ext_resource type="AudioStream" uid="uid://biyy8tjbffxf2" path="res://Assets/sounds/spinopel-run-fast-on-asphalt-393096.mp3" id="61_vn8q6"]
 [ext_resource type="AudioStream" uid="uid://b3pk1d0oevalx" path="res://Assets/sounds/phatphrogstudio-male-soldier-voice-attack-grunt-520841.mp3" id="62_8vj0r"]
@@ -357,7 +358,7 @@ unique_name_in_owner = true
 sprite_frames = SubResource("SpriteFrames_06tpx")
 animation = &"block"
 autoplay = "walk"
-frame_progress = 0.75678605
+frame_progress = 0.373396
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1322977752]
 visible = false
@@ -517,6 +518,9 @@ to = NodePath("../../NotAttack")
 event = &"block_to_na"
 delay_in_seconds = "0.0"
 
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1040387305]
+zoom = Vector2(3, 3)
+
 [node name="HitBox" type="Area2D" parent="." unique_id=174092556]
 visible = false
 collision_layer = 0
@@ -562,6 +566,13 @@ script = ExtResource("20_rcvs5")
 max_health = 100
 health = 100
 metadata/_custom_type_script = "uid://b7u8j8k6amgm8"
+
+[node name="StateChartDebugger" parent="." unique_id=1467405914 instance=ExtResource("59_0a2xn")]
+offset_left = -317.0
+offset_top = -176.0
+offset_right = -93.0
+offset_bottom = -66.0
+initial_node_to_watch = NodePath("../StateChart")
 
 [node name="SFX" type="Node2D" parent="." unique_id=119512729]
 

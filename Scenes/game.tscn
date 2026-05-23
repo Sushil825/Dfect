@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://bxjkrydv0ux32"]
+
+[ext_resource type="Script" uid="uid://dandsnn5bxj3" path="res://Scenes/game.gd" id="1_ebmjs"]
+[ext_resource type="PackedScene" uid="uid://bnx5fo57gxhef" path="res://Scenes/Player/player.tscn" id="2_qxrlw"]
+[ext_resource type="PackedScene" uid="uid://llqa83yqei45" path="res://Scenes/World/room/room.tscn" id="3_wrm1d"]
+[ext_resource type="Script" uid="uid://bwasskkb537ij" path="res://Scenes/camera_2d.gd" id="4_3dryh"]
+
+[node name="Game" type="Node2D" unique_id=1524400096]
+process_mode = 3
+script = ExtResource("1_ebmjs")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1733387903]
+process_mode = 1
+
+[node name="Player" parent="WorldEnvironment" unique_id=864730155 instance=ExtResource("2_qxrlw")]
+position = Vector2(72, 561)
+
+[node name="Camera2D" type="Camera2D" parent="WorldEnvironment" unique_id=964034373 node_paths=PackedStringArray("_target")]
+position = Vector2(68, 568)
+offset = Vector2(100, -80)
+zoom = Vector2(3, 3)
+script = ExtResource("4_3dryh")
+_target = NodePath("../Player")
+transition_type = 4
+easing_type = 2
+_look_ahead_duration = 1.5
+
+[node name="RoomManager" type="Node2D" parent="WorldEnvironment" unique_id=1450332996]
+
+[node name="Room" parent="WorldEnvironment/RoomManager" unique_id=901702137 instance=ExtResource("3_wrm1d")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=552801169]

@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://bcxevyshasiqd" path="res://Scenes/World/room/room.gd" id="1_wcm67"]
 [ext_resource type="Texture2D" uid="uid://bxp8w7up2vdxj" path="res://Assets/Final/Background_0.png" id="2_hqyuv"]
 [ext_resource type="PackedScene" uid="uid://blflgmwsnfr6v" path="res://Scenes/World/tile_map_layer.tscn" id="2_ru8nd"]
-[ext_resource type="PackedScene" uid="uid://bnx5fo57gxhef" path="res://Scenes/Player/player.tscn" id="3_dyk14"]
 [ext_resource type="TileSet" uid="uid://c8ld54l88tg7p" path="res://Scripts/resource/tiles/new_tile_set.tres" id="3_eauwh"]
 [ext_resource type="PackedScene" uid="uid://qjougta1wy43" path="res://Scenes/Interactables/platform.tscn" id="5_dsm17"]
 [ext_resource type="PackedScene" uid="uid://k3ibx5aql2ry" path="res://Scenes/Enemy/Enemies/slime.tscn" id="6_nxut6"]
@@ -61,9 +60,6 @@ tile_map_data = PackedByteArray("AACTABQAAAADAAEAAACTABUAAAADAAIAAACTABYAAAADAAM
 [node name="TileMapLayer2" type="TileMapLayer" parent="Tiles" unique_id=1089905780]
 tile_map_data = PackedByteArray("AAAwABgABwAAAAcAAAAwABkABwAAAAgAAAAwABoABwAAAAkAAAAxABgABwAAAAcAAAAxABkABwAAAAgAAAAxABoABwAAAAkAAAAwABsABwAAAAkAAAAwABwABwAAAAkAAAAwAB0ABwAAAAkAAAAwAB4ABwAAAAkAAAAwAB8ABwAAAAkAAAAxABsABwAAAAkAAAAxABwABwAAAAkAAAAxAB0ABwAAAAkAAAAxAB4ABwAAAAkAAAAxAB8ABwAAAAkAAAA=")
 tile_set = ExtResource("3_eauwh")
-
-[node name="Player" parent="." unique_id=864730155 instance=ExtResource("3_dyk14")]
-position = Vector2(171, 580)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="." unique_id=1886428865]
 

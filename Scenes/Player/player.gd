@@ -5,7 +5,7 @@ class_name Player
 @onready var animated_sprite_2d: AnimatedSprite2D = %AnimatedSprite2D
 @onready var player_state_handler: Node = $PlayerStateHandler
 @onready var hit_box: HitBox = $HitBox
-
+signal changed_direction(dir:float)
 
 
 func _ready() -> void:
@@ -29,9 +29,11 @@ func check_direction():
 	if Input.get_axis("go_left","go_right")<0:
 		direction=Vector2.LEFT
 		animated_sprite_2d.flip_h=true
+		changed_direction.emit(direction.x)
 	elif Input.get_axis("go_left","go_right")>0:
 		direction=Vector2.RIGHT
 		animated_sprite_2d.flip_h=false
+		changed_direction.emit(direction.x)
 
 
 func handle_input():
