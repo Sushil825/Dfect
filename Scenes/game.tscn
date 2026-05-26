@@ -13,11 +13,11 @@ script = ExtResource("1_ebmjs")
 process_mode = 1
 
 [node name="Player" parent="WorldEnvironment" unique_id=864730155 instance=ExtResource("2_qxrlw")]
-position = Vector2(72, 561)
+position = Vector2(124, 733)
 
 [node name="Camera2D" type="Camera2D" parent="WorldEnvironment" unique_id=964034373 node_paths=PackedStringArray("_target")]
 position = Vector2(68, 568)
-offset = Vector2(100, -80)
+offset = Vector2(100, -40)
 zoom = Vector2(3, 3)
 script = ExtResource("4_3dryh")
 _target = NodePath("../Player")

@@ -5,4 +5,5 @@
 [resource]
 script = ExtResource("1_d35jf")
 run_speed = 400.0
+jump_force = -500.0
 metadata/_custom_type_script = "uid://cl4nkrw8chx14"
