@@ -16,7 +16,7 @@ process_mode = 1
 position = Vector2(124, 733)
 
 [node name="Camera2D" type="Camera2D" parent="WorldEnvironment" unique_id=964034373 node_paths=PackedStringArray("_target")]
-position = Vector2(68, 568)
+position = Vector2(121, 748)
 offset = Vector2(100, -40)
 zoom = Vector2(3, 3)
 script = ExtResource("4_3dryh")
@@ -30,3 +30,10 @@ _look_ahead_duration = 1.5
 [node name="Room" parent="WorldEnvironment/RoomManager" unique_id=901702137 instance=ExtResource("3_wrm1d")]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=552801169]
+
+[node name="HealthBarUI" type="ProgressBar" parent="CanvasLayer" unique_id=731301563]
+offset_left = -88.0
+offset_top = 536.0
+offset_right = 49.0
+offset_bottom = 553.0
+show_percentage = false

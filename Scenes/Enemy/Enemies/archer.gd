@@ -62,19 +62,6 @@ var _is_dashing:=false
 
 
 #Shader functions
-
-
-func flash(color:Color,time:float):
-	var mat=animated_sprite_2d.material
-	mat.set_shader_parameter("active",true)
-	mat.set_shader_parameter("tint",color)
-	await get_tree().create_timer(time).timeout
-	mat.set_shader_parameter("active",false)
-
-
-
-
-
 #Signals
 
 
@@ -311,7 +298,7 @@ func _on_dash_timer_timeout() -> void:
 
 func _on_hurt_box_hit_received(hitbos: HitBox) -> void:
 	health_component.take_damage(hitbos.damage)
-	flash(Color.RED,0.2)
+	Utils.flash(animated_sprite_2d,Color.RED,0.1)
 	var new_effect=particle_effect.instantiate()
 	new_effect.global_position=global_position
 	get_tree().current_scene.add_child(new_effect)
